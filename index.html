@@ -1040,13 +1040,46 @@ body { font-family: 'Barlow', sans-serif; background: var(--black); color: var(-
   letter-spacing: 0.08em; text-transform: uppercase;
 }
 
-/* Toggle row inside Stream Saver */
+/* Toggle row inside Xfinity Pro card */
 .ss-bundle-card .ss-toggle {
   background: rgba(255,255,255,0.04);
   position: relative; z-index: 1;
 }
 .ss-bundle-card .ss-toggle-label { color: #FFFFFF !important; }
 .ss-bundle-card .ss-toggle-sub { color: rgba(255,255,255,0.65) !important; }
+
+/* ── XFINITY PRO FEATURE TILES ── */
+.xpro-features {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 10px;
+  margin: 18px 0 14px; position: relative; z-index: 1;
+}
+.xpro-feature {
+  background: rgba(255,215,0,0.06);
+  border: 1px solid rgba(255,215,0,0.25);
+  border-radius: 12px; padding: 14px 12px;
+  text-align: center; backdrop-filter: blur(8px);
+  display: flex; flex-direction: column; align-items: center; gap: 6px;
+}
+.xpro-feat-icon {
+  width: 36px; height: 36px; display: flex; align-items: center; justify-content: center;
+  margin-bottom: 2px;
+}
+.xpro-feat-icon svg { width: 22px; height: 22px; }
+.xpro-feat-title {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 15px; font-weight: 900; color: #FFD700;
+  letter-spacing: 0.02em; line-height: 1.15;
+}
+.xpro-feat-sub {
+  font-size: 11px; color: rgba(255,255,255,0.75);
+  line-height: 1.4; font-weight: 500;
+}
+.xpro-req {
+  font-size: 11px; color: rgba(255,255,255,0.55);
+  text-align: center; font-style: italic;
+  margin-bottom: 14px; padding: 0 8px;
+  position: relative; z-index: 1;
+}
 
 /* ── FOOTER PRICE BLOCK — NAVY + GOLD ── */
 .footer-price-block {
@@ -1573,41 +1606,57 @@ body { font-family: 'Barlow', sans-serif; background: var(--black); color: var(-
         </div>
       </div>
 
-      <!-- Streaming savings (only shown when relevant) -->
-      <div id="streaming-savings-box" style="display:none;"></div>
-
-      <!-- STREAM SAVER BUNDLE CARD -->
-      <div class="ss-bundle-card" id="ss-bundle-card">
+      <!-- XFINITY PRO ADD-ON CARD -->
+      <div class="ss-bundle-card" id="xpro-card">
         <div class="ss-bundle-header" style="flex-direction:column;align-items:center;text-align:center;">
-          <div class="ss-bundle-eyebrow" style="justify-content:center;" id="ss-bundle-eyebrow-txt">
-            <svg width="11" height="11" viewBox="0 0 24 24" fill="var(--gold)"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-            The More You Bundle, The More You Save
+          <div class="ss-bundle-eyebrow" style="justify-content:center;color:#FFD700;" id="xpro-eyebrow-txt">
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="#FFD700"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+            Premium Add-On — Optional Upgrade
           </div>
-          <div class="ss-bundle-title" id="ss-bundle-title-txt">Stream Saver</div>
-          <div class="ss-bundle-sub" id="ss-bundle-sub-txt">Your services — bundled together for less</div>
+          <div class="ss-bundle-title" id="xpro-title-txt">Xfinity Pro</div>
+          <div class="ss-bundle-sub" id="xpro-sub-txt">Advanced coverage, network priority &amp; backup connectivity</div>
         </div>
 
-        <!-- Service pills (dynamic, populated by renderResult) -->
-        <div class="ss-bundle-services" id="ss-bundle-services-dyn" style="justify-content:center;"></div>
-
-        <!-- Value bar -->
-        <div class="ss-value-bar">
-          <div class="ss-value-bar-left">
-            <span class="ss-value-label" id="ss-standalone-lbl">Standalone cost</span>
-            <span class="ss-value-strike" id="ss-standalone-val">$0/mo</span>
+        <!-- Feature tiles -->
+        <div class="xpro-features">
+          <div class="xpro-feature">
+            <div class="xpro-feat-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="#FFD700" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-2 2 2 2 0 01-2-2v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83 0 2 2 0 010-2.83l.06-.06a1.65 1.65 0 00.33-1.82 1.65 1.65 0 00-1.51-1H3a2 2 0 01-2-2 2 2 0 012-2h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 010-2.83 2 2 0 012.83 0l.06.06a1.65 1.65 0 001.82.33H9a1.65 1.65 0 001-1.51V3a2 2 0 012-2 2 2 0 012 2v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 0 2 2 0 010 2.83l-.06.06a1.65 1.65 0 00-.33 1.82V9a1.65 1.65 0 001.51 1H21a2 2 0 012 2 2 2 0 01-2 2h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
+            </div>
+            <div class="xpro-feat-title" id="xpro-f1-h">Device Boosting</div>
+            <div class="xpro-feat-sub" id="xpro-f1-s">Prioritize bandwidth to gaming consoles or work laptops</div>
           </div>
-          <div class="ss-value-bar-right">
-            <span class="ss-value-label" id="ss-xfinity-lbl">With Xfinity</span>
-            <span class="ss-value-price" id="ss-xfinity-val">$0/mo</span>
-            <span class="ss-value-save" id="ss-save-txt">Save $0/mo</span>
+          <div class="xpro-feature">
+            <div class="xpro-feat-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="#FFD700" stroke-width="2"><path d="M5 12.55a11 11 0 0114 0M1.42 9a16 16 0 0121.16 0M8.53 16.11a6 6 0 016.95 0M12 20h.01"/></svg>
+            </div>
+            <div class="xpro-feat-title" id="xpro-f2-h">Seamless Mesh WiFi</div>
+            <div class="xpro-feat-sub" id="xpro-f2-s">Up to 2 WiFi extenders — wall-to-wall coverage, no dead zones</div>
+          </div>
+          <div class="xpro-feature">
+            <div class="xpro-feat-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="#FFD700" stroke-width="2"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg>
+            </div>
+            <div class="xpro-feat-title" id="xpro-f3-h">Cellular Backup</div>
+            <div class="xpro-feat-sub" id="xpro-f3-s">4G LTE backup during outages — up to 30 Mbps down / 7 Mbps up</div>
+          </div>
+          <div class="xpro-feature">
+            <div class="xpro-feat-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="#FFD700" stroke-width="2"><rect x="1" y="6" width="18" height="12" rx="2"/><line x1="23" y1="13" x2="23" y2="11"/></svg>
+            </div>
+            <div class="xpro-feat-title" id="xpro-f4-h">Battery Backup Ready</div>
+            <div class="xpro-feat-sub" id="xpro-f4-s">Optional battery pack — up to 4 hours during a power outage</div>
           </div>
         </div>
+
+        <!-- Requirements note -->
+        <div class="xpro-req" id="xpro-req-txt">Requires Xfinity Gateway (XB7, XB8, or XB10)</div>
 
         <!-- Toggle -->
-        <div class="ss-toggle-row" onclick="toggleSS()">
-          <div class="ss-toggle-btn" id="ss-toggle-btn"><div class="ss-toggle-thumb"></div></div>
-          <div class="ss-toggle-label" id="ss-toggle-label">Add Stream Saver to my plan</div>
-          <div class="ss-toggle-sub" id="ss-toggle-sub">+$0/mo</div>
+        <div class="ss-toggle-row" onclick="togglePro()">
+          <div class="ss-toggle-btn" id="xpro-toggle-btn"><div class="ss-toggle-thumb"></div></div>
+          <div class="ss-toggle-label" id="xpro-toggle-label">Add Xfinity Pro to my plan</div>
+          <div class="ss-toggle-sub" id="xpro-toggle-sub">+$15/mo</div>
         </div>
       </div>
       <div class="r-cta-row">
@@ -1796,7 +1845,6 @@ body { font-family: 'Barlow', sans-serif; background: var(--black); color: var(-
           <option value="">— Select your store —</option>
           <option>Bourbonnais</option>
           <option>Burbank</option>
-          <option>Calumet City</option>
           <option>Cicero</option>
           <option>Dekalb</option>
           <option>Elkhart</option>
@@ -1864,7 +1912,7 @@ body { font-family: 'Barlow', sans-serif; background: var(--black); color: var(-
 ══════════════════════════════════ */
 const S = {
   answers: {}, step: 0,
-  speed: 'gig', streamSaver: false, activeSSBundle: [],
+  speed: 'gig', xfinityPro: false,
   carrier: '', mobLines: 1, currentBill: 0, mobMode: 'signup'
 };
 
@@ -1872,11 +1920,11 @@ const S = {
    PRICING
 ══════════════════════════════════ */
 const SPEEDS = [
-  { id:'gig', label:'GIG',  mbps:'1,000 Mbps', display:'1,000', price:70, bestValue:true },
+  { id:'gig', label:'GIG',  mbps:'1,000 Mbps', display:'1,000', price:50, bestValue:true },
   { id:'300', label:'300',  mbps:'300 Mbps',   display:'300',   price:45 },
   { id:'500', label:'500',  mbps:'500 Mbps',   display:'500',   price:60 },
 ];
-const NOW_TV=20, SMART_HOME=15;
+const NOW_TV=20, SMART_HOME=10;
 
 // Streaming service prices for savings calculation (standalone monthly cost)
 const SVC_PRICES = {
@@ -1884,67 +1932,17 @@ const SVC_PRICES = {
   'Prime Video': 9, 'Peacock': 6, 'HBO Max / Max': 16
 };
 
-// Services included free in the base Gig bundle (Disney+ / Hulu / Peacock are part of the $70 Gig + $20 NOW TV + $15 Cam = $105)
-const BUNDLE_INCLUDED = ['Disney+', 'Hulu', 'Peacock'];
+// Services included free in the base Gig bundle (Peacock + NOW TV come via the $50 Gig + $20 NOW TV + $10 Cam = $80)
+// As of the latest changes, Disney+/Hulu are NO LONGER included free.
+const BUNDLE_INCLUDED = ['Peacock'];
 
-// All add-on services Stream Saver can mix-and-match (NOW TV is always already included via internet plan)
-const SS_AVAILABLE = ['Netflix', 'Apple TV+', 'Disney+', 'Hulu', 'Peacock', 'HBO Max / Max'];
-
-// Stream Saver bundle pricing tiers — additional cost ON TOP of base plan that already has NOW TV.
-// $5 per add-on service.
-// IMPORTANT: With the Gig (Prestige) bundle, Disney+, Hulu, and NOW TV are already included free,
-// so Stream Saver only needs to cover the 3 remaining services: Netflix, Apple TV+, HBO Max/Max.
-// That's why Gig customers cap at $15 — and that's the value pitch: get the whole bundle, save more.
-const SS_TIERS = {
-  0: 0,
-  1: 5,
-  2: 10,
-  3: 15,
-  4: 20,  // Only reachable on 300/500 plans where Disney/Hulu/Peacock aren't free
-  5: 25,
-  6: 30
-};
+// Xfinity Pro premium add-on — replaced the old NOW Stream Saver entirely
+const XFINITY_PRO_PRICE = 15;
 
 /* ──────────────────────────────────────
-   SMART STREAM SAVER BUILDER
-   Picks ONLY services the customer pays for,
-   ONLY if bundling saves money vs standalone.
-   NOW TV is always included via the internet plan.
+   XFINITY PRO HELPERS
+   Premium add-on; flat $15/mo when enabled.
 ────────────────────────────────────────── */
-function buildSmartStreamSaver(){
-  const customerPays = (S.answers.svcs || []).filter(s => s !== 'None' && s !== 'Other' && s !== 'Prime Video');
-  // Filter to only services Stream Saver actually offers
-  let candidateServices = customerPays.filter(s => SS_AVAILABLE.includes(s));
-
-  // For Gig plan: Disney+, Hulu, Peacock are already included free in the base bundle.
-  // Don't double-count them in Stream Saver — they're already covered.
-  if(S.speed === 'gig'){
-    candidateServices = candidateServices.filter(s => !BUNDLE_INCLUDED.includes(s));
-  }
-
-  // Calculate standalone cost of those services
-  const standaloneCost = candidateServices.reduce((sum, s) => sum + (SVC_PRICES[s] || 0), 0);
-  const tierCost = SS_TIERS[candidateServices.length] || 0;
-
-  // Decision: only include Stream Saver if it saves money
-  // For 0 candidates: definitely off
-  // For 1 candidate: only if standalone cost > tier cost
-  // For 2+ candidates: include (the more they have, the more they save)
-  if(candidateServices.length === 0){
-    return { enabled: false, services: [], price: 0, savings: 0, standaloneCost: 0 };
-  }
-  if(candidateServices.length === 1 && standaloneCost <= tierCost){
-    return { enabled: false, services: [], price: 0, savings: 0, standaloneCost };
-  }
-
-  return {
-    enabled: true,
-    services: candidateServices,
-    price: tierCost,
-    savings: Math.max(0, standaloneCost - tierCost),
-    standaloneCost
-  };
-}
 
 function spObj(id){ return SPEEDS.find(s=>s.id===id); }
 function bundleBase(id, includeHome){ const sp=spObj(id); return sp.price+NOW_TV+(includeHome?SMART_HOME:0); }
@@ -1952,35 +1950,9 @@ function mobPrice(n){ if(n<=0)return 0; return 15+(n-1)*45; }
 
 const CARRIERS=['Verizon','AT&T','T-Mobile','Sprint','Cricket','Metro by T-Mobile','Boost Mobile','US Cellular','Other'];
 
-// Get current Stream Saver price (used everywhere SS_PRICE was hardcoded before)
-function ssPrice(){
-  if(!S.streamSaver) return 0;
-  // If user has manually toggled but no smart bundle exists, fall back to default 2-service tier
-  const smart = buildSmartStreamSaver();
-  return smart.enabled ? smart.price : (S.streamSaver ? 15 : 0);
-}
-
-/* ══════════════════════════════════
-   STREAMING SAVINGS LOGIC
-══════════════════════════════════ */
-function calcStreamingSavings(){
-  const selected = S.answers.svcs || [];
-  const rows = [];
-
-  selected.forEach(svc => {
-    if(svc === 'None') return;
-    // Is this service covered in the base bundle?
-    if(BUNDLE_INCLUDED.includes(svc)){
-      rows.push({ name: svc, price: SVC_PRICES[svc] || 0, source: 'bundle' });
-    }
-    // Is this service covered via Stream Saver (and did they add it)?
-    else if(S.streamSaver && (S.activeSSBundle||[]).includes(svc)){
-      rows.push({ name: svc, price: SVC_PRICES[svc] || 0, source: 'streamsaver' });
-    }
-    // Otherwise, not covered — no savings
-  });
-
-  return rows;
+// Get current Xfinity Pro price ($15 when enabled, $0 when not)
+function proPrice(){
+  return S.xfinityPro ? XFINITY_PRO_PRICE : 0;
 }
 
 /* ══════════════════════════════════
@@ -2038,23 +2010,18 @@ const ES = {
   'Watch on any device, anywhere — no cable box needed': 'Mira en cualquier dispositivo, en cualquier lugar',
   'Up to 10 Account Users': 'Hasta 10 usuarios en la cuenta',
   'Create profiles for every member of your household with personalized settings': 'Crea perfiles para cada miembro del hogar',
-  // Stream Saver
-  'Optional Add-On': 'Complemento Opcional',
-  'The More You Bundle, The More You Save': 'Cuanto más combinas, más ahorras',
-  'Netflix + Apple TV+ + Peacock Premium — all in one add-on': 'Netflix + Apple TV+ + Peacock Premium — todo en uno',
-  'Standalone cost': 'Costo por separado',
-  'With Xfinity': 'Con Xfinity',
-  'Save $18/mo': 'Ahorra $18/mes',
-  'Add Stream Saver to my plan': 'Agregar Stream Saver a mi plan',
-  'Stream Saver added ✓': 'Stream Saver agregado ✓',
+  // Xfinity Pro
+  'Premium Add-On — Optional Upgrade': 'Complemento Premium — Mejora Opcional',
+  'Xfinity Pro': 'Xfinity Pro',
+  'Advanced coverage, network priority & backup connectivity': 'Cobertura avanzada, prioridad de red y respaldo de conectividad',
+  'Requires Xfinity Gateway (XB7, XB8, or XB10)': 'Requiere Xfinity Gateway (XB7, XB8 o XB10)',
+  'Add Xfinity Pro to my plan': 'Agregar Xfinity Pro a mi plan',
+  'Xfinity Pro added ✓': 'Xfinity Pro agregado ✓',
   '+$15/mo': '+$15/mes',
   '+$15/mo — added to your plan': '+$15/mes — agregado a tu plan',
-  'Worth $43+ separately': 'Vale $43+ por separado',
   // Savings callout
   'The more you bundle, the more you save': 'Cuanto más combinas, más ahorras',
-  'Stream Saver auto-added — you already pay for services it covers': 'Stream Saver agregado automáticamente — ya pagas por servicios que incluye',
   '✓ included in Gig bundle': '✓ incluido en paquete Gig',
-  '✓ included via Stream Saver': '✓ incluido en Stream Saver',
   'Services you can cancel': 'Servicios que puedes cancelar',
   // Footer price block
   '5-Year Price Lock · No Contract · Unlimited Data': 'Precio fijo 5 años · Sin contrato · Datos ilimitados',
@@ -2090,7 +2057,7 @@ const ES = {
   'First Year': 'Primer Año',
   'Your Complete Xfinity Bundle': 'Tu Paquete Completo de Xfinity',
   '★ Best Value — Gig Internet': '★ Mejor Valor — Internet Gig',
-  'Disney+ · Hulu · Peacock · NOW TV · Smart Home Camera': 'Disney+ · Hulu · Peacock · NOW TV · Cámara de Seguridad',
+  'Peacock · NOW TV · Smart Home Camera': 'Peacock · NOW TV · Cámara de Seguridad',
   '5-Year Price Lock': 'Precio Fijo 5 Años',
   'Sign Up — Let\'s Get Started': '¡Inscríbeme — Comencemos!',
   'No Thanks': 'No, Gracias',
@@ -2149,16 +2116,12 @@ const ES = {
   'Access millions of Xfinity hotspots nationwide — always connected': 'Accede a millones de puntos de acceso en todo el país',
   'Up to 10 Account Users': 'Hasta 10 usuarios en la cuenta',
   'Create profiles for every member of your household with personalized settings': 'Crea perfiles para cada miembro del hogar',
-  // Stream Saver
-  'Optional Add-On': 'Complemento opcional',
-  'Upgrade with NOW Stream Saver': 'Mejora con NOW Stream Saver',
-  'The More You Bundle, The More You Save': 'Cuanto más combinas, más ahorras',
-  'NOW Stream Saver': 'NOW Stream Saver',
-  'Netflix + Apple TV+ + Peacock Premium — all in one add-on': 'Netflix + Apple TV+ + Peacock Premium — todo en uno',
-  'Add Stream Saver to my plan': 'Agregar Stream Saver a mi plan',
-  'Stream Saver added ✓': 'Stream Saver agregado ✓',
-  'Standalone cost': 'Costo por separado',
-  'With Xfinity': 'Con Xfinity',
+  // Xfinity Pro
+  'Premium Add-On — Optional Upgrade': 'Complemento Premium — Mejora Opcional',
+  'Xfinity Pro': 'Xfinity Pro',
+  'Advanced coverage, network priority & backup connectivity': 'Cobertura avanzada, prioridad de red y respaldo de conectividad',
+  'Add Xfinity Pro to my plan': 'Agregar Xfinity Pro a mi plan',
+  'Xfinity Pro added ✓': 'Xfinity Pro agregado ✓',
   // Footer
   'Your monthly total': 'Tu total mensual',
   '5-Year Price Lock · No Contract · Unlimited Data': 'Bloqueo de precio 5 años · Sin contrato · Datos ilimitados',
@@ -2276,10 +2239,7 @@ function qNext(){
 ══════════════════════════════════ */
 function recSpeed(){
   const v=S.answers.devices||'';
-  const svcs=S.answers.svcs||[];
-  // If customer already pays for Disney+ or Hulu, Gig is cheaper due to bundle savings
-  const hasGigSavings = svcs.includes('Disney+') || svcs.includes('Hulu');
-  if(hasGigSavings) return 'gig';
+  // Peacock alone isn't enough to justify auto-upgrading
   if(v==='1 to 3 devices') return '300';
   if(v==='4 to 5 devices') return '500';
   return 'gig';
@@ -2290,11 +2250,8 @@ function recSpeed(){
 ══════════════════════════════════ */
 function showResult(){
   S.speed=recSpeed();
-  // Smart auto-enable: build the bundle based on what customer already pays for,
-  // and only enable Stream Saver if it actually saves them money.
-  const smart = buildSmartStreamSaver();
-  S.streamSaver = smart.enabled;
-  S.activeSSBundle = smart.services;
+  // Xfinity Pro is an opt-in upgrade, never auto-enabled
+  S.xfinityPro = false;
   document.getElementById('quiz-screen').classList.remove('active');
   document.getElementById('result-screen').classList.add('active');
   renderResult();
@@ -2304,8 +2261,8 @@ function renderResult(){
   const sp=spObj(S.speed);
   const name=S.answers.name||'';
   const base=bundleBase(S.speed,true);
-  const ss=ssPrice();
-  const total=base+ss;
+  const pro=proPrice();
+  const total=base+pro;
 
   // Greeting
   const es = (S.answers.lang||'English')==='Español';
@@ -2329,72 +2286,19 @@ function renderResult(){
   // Apply language translations
   applyTranslations();
 
-  // ── SMART STREAM SAVER RENDER ──
-  // Rebuild the active bundle based on customer answers (when speed changes the bundle may shift too)
-  const smartBundle = buildSmartStreamSaver();
-  if(S.streamSaver && (!S.activeSSBundle || S.activeSSBundle.length===0)){
-    S.activeSSBundle = smartBundle.enabled ? smartBundle.services : ['Netflix','Apple TV+'];
-  }
-  const activeBundle = S.activeSSBundle || [];
-  const ssCurrentPrice = SS_TIERS[activeBundle.length] || 15;
-  const ssStandalone = activeBundle.reduce((sum,s) => sum + (SVC_PRICES[s]||0), 0);
-  const ssSavings = Math.max(0, ssStandalone - ssCurrentPrice);
-
-  // Render the service pills dynamically
-  const svcPills = document.getElementById('ss-bundle-services-dyn');
-  if(svcPills){
-    if(activeBundle.length === 0){
-      svcPills.innerHTML = `<div style="color:rgba(255,255,255,0.6);font-size:13px;padding:8px 14px;">${t('No matching services to bundle')}</div>`;
-    } else {
-      svcPills.innerHTML = activeBundle.map(svcName => {
-        const price = SVC_PRICES[svcName] || 0;
-        const cls = svcPillClass(svcName);
-        const icon = svcPillIcon(svcName);
-        return `<div class="ss-svc ${cls}">${icon}${svcName} <span class="ss-svc-price">$${price}/mo</span></div>`;
-      }).join('');
-    }
-  }
-
-  // Render the value bar + subtitle
-  const subtxt = document.getElementById('ss-bundle-sub-txt');
-  if(subtxt){
-    subtxt.textContent = activeBundle.length > 0
-      ? activeBundle.join(' + ') + ' — ' + (es?'todos en un solo paquete':'all in one bundle')
-      : t('Your services — bundled together for less');
-  }
-  const standaloneVal = document.getElementById('ss-standalone-val');
-  const xfinityVal = document.getElementById('ss-xfinity-val');
-  const saveTxt = document.getElementById('ss-save-txt');
-  if(standaloneVal) standaloneVal.textContent = '$' + ssStandalone + '/mo';
-  if(xfinityVal) xfinityVal.textContent = '$' + ssCurrentPrice + '/mo';
-  if(saveTxt) saveTxt.textContent = (es?'Ahorra ':'Save ') + '$' + ssSavings + '/mo';
-
-  // Hide the entire Stream Saver card if there are no eligible services to bundle
-  const ssCard = document.getElementById('ss-bundle-card');
-  if(ssCard){
-    if(activeBundle.length === 0 && !S.streamSaver){
-      ssCard.style.display = 'none';
-    } else {
-      ssCard.style.display = '';
-    }
-  }
-
-  // Stream Saver toggle state
-  const tb=document.getElementById('ss-toggle-btn');
-  const tl=document.getElementById('ss-toggle-label');
-  const ts=document.getElementById('ss-toggle-sub');
-  if(S.streamSaver){
+  // Xfinity Pro toggle state
+  const tb=document.getElementById('xpro-toggle-btn');
+  const tl=document.getElementById('xpro-toggle-label');
+  const ts=document.getElementById('xpro-toggle-sub');
+  if(S.xfinityPro){
     tb.classList.add('on');
-    tl.textContent=t('Stream Saver added ✓');
-    ts.textContent='+$'+ssCurrentPrice+'/mo — '+t('added to your plan');
+    tl.textContent=t('Xfinity Pro added ✓');
+    ts.textContent='+$15/mo — '+t('added to your plan');
   } else {
     tb.classList.remove('on');
-    tl.textContent=t('Add Stream Saver to my plan');
-    ts.textContent='+$'+ssCurrentPrice+'/mo';
+    tl.textContent=t('Add Xfinity Pro to my plan');
+    ts.textContent='+$15/mo';
   }
-
-  // Streaming savings
-  renderStreamingSavings();
 }
 
 // Helpers for service pill rendering
@@ -2448,34 +2352,7 @@ function renderIncludes(){
     'More than 20 devices':'20+'
   };
   const devNum = devNumMap[devs] || '';
-  const svcs = S.answers.svcs || [];
-  const hasDisney = svcs.includes('Disney+');
-  const hasHulu   = svcs.includes('Hulu');
-  const wasUpgraded = (hasDisney || hasHulu) && S.speed === 'gig';
-  const savingsServices = [hasDisney&&'Disney+', hasHulu&&'Hulu'].filter(Boolean);
-  const savingsTotal = (hasDisney?14:0)+(hasHulu?18:0);
   let savingsBanner = '';
-  if(wasUpgraded){
-    const svcList = savingsServices.join(es?' y ':' and ');
-    const peopleMap = {
-      'Just me': null,
-      '2 people':      es?'1 otra persona':'1 other person',
-      '3 to 4 people': es?'2–3 otras personas':'2–3 other people',
-      '5 to 6 people': es?'4–5 otras personas':'4–5 other people',
-      '7 or more':     es?'6 o más otras personas':'6 or more other people'
-    };
-    const householdPhrase = peopleMap[people] || null;
-    savingsBanner = `
-      <div class="personalized-banner" style="background:linear-gradient(135deg, #1A1233 0%, #1A4332 50%, #1A1233 100%);border:1px solid rgba(0,255,139,0.3);">
-        <div class="pb-eyebrow" style="color:#00FF8B;">${es?'★ Actualización Inteligente — Ahorra Dinero':'★ Smart Upgrade — Saves You Money'}</div>
-        <div class="pb-headline" style="color:#FFFFFF;">${es?'Gig es más económico para ti':'Gig is actually cheaper for you'}${name?', '+name:''}.</div>
-        <div class="pb-body" style="color:rgba(255,255,255,0.92);">
-          ${es
-            ?`Ya pagas por <strong>${svcList}</strong> — incluidos gratis con el plan Gig. Eso son <strong style="color:#00FF8B;">$${savingsTotal}/mes de vuelta en tu bolsillo</strong>, haciendo este el plan más rentable para ti${householdPhrase?' y las <strong>'+householdPhrase+'</strong>':''} en tu hogar.`
-            :`You already pay for <strong>${svcList}</strong> — those are included free with the Gig plan. That's <strong style="color:#00FF8B;">$${savingsTotal}/mo back in your pocket</strong>, making this the most cost-effective plan for you${householdPhrase?' and the <strong>'+householdPhrase+'</strong>':''} in your household.`}
-        </div>
-      </div>`;
-  }
   const andWord = es?' y ':' and ';
   let usageStr = '';
   if(usagePhrases.length===1) usageStr=usagePhrases[0];
@@ -2518,34 +2395,18 @@ function renderIncludes(){
   ];
 
   // ── LOGO TILES based on speed tier ──
-  let logoSection='';
-  if(S.speed==='gig'){
-    logoSection=`
-      <div class="svc-section-head">Streaming &amp; Live TV — all included in your bundle</div>
-      <div class="logo-grid logo-grid-4">
-        ${LOGO_DISNEY}
-        ${LOGO_HULU}
-        ${LOGO_PEACOCK}
-        ${LOGO_NOWTV}
-      </div>
-      <div class="svc-section-head">Smart Home Security — included in your bundle</div>
-      <div class="logo-grid logo-grid-2">
-        ${LOGO_SMARTHOME}
-        ${LOGO_SMARTHOME_DESC}
-      </div>`;
-  } else {
-    logoSection=`
-      <div class="svc-section-head">Live TV — included in your bundle</div>
-      <div class="logo-grid logo-grid-2">
-        ${LOGO_NOWTV}
-        ${LOGO_NOWTV_DESC}
-      </div>
-      <div class="svc-section-head">Smart Home Security — included in your bundle</div>
-      <div class="logo-grid logo-grid-2">
-        ${LOGO_SMARTHOME}
-        ${LOGO_SMARTHOME_DESC}
-      </div>`;
-  }
+  // All speeds now include Peacock + NOW TV (Disney+/Hulu were removed as of latest pricing change)
+  let logoSection=`
+    <div class="svc-section-head">Streaming &amp; Live TV — included in your bundle</div>
+    <div class="logo-grid logo-grid-2">
+      ${LOGO_PEACOCK}
+      ${LOGO_NOWTV}
+    </div>
+    <div class="svc-section-head">Smart Home Security — included in your bundle</div>
+    <div class="logo-grid logo-grid-2">
+      ${LOGO_SMARTHOME}
+      ${LOGO_SMARTHOME_DESC}
+    </div>`;
 
   // ── MEMBERSHIP PERKS ──
   const membershipItems = [
@@ -2559,8 +2420,6 @@ function renderIncludes(){
   inner.innerHTML = `
     <div class="section-eyebrow">${t('Everything in your bundle')}</div>
     <div class="section-title" id="section-title-dyn">${t("Here's what you're getting")}</div>
-
-    ${savingsBanner ? '' : banner}
 
     <div class="speed-hero-new">
       <div class="shn-centered-top">
@@ -2596,8 +2455,8 @@ function renderIncludes(){
           <div class="vs-icon vs-gold">
             <svg viewBox="0 0 24 24" fill="none" stroke="#FFD700" stroke-width="2.5"><rect x="2" y="6" width="20" height="14" rx="2"/><path d="M2 10h20M7 15h2"/></svg>
           </div>
-          <div class="vs-stat">5</div>
-          <div class="vs-label">${es?'Servicios de Streaming':'Streaming Services'}</div>
+          <div class="vs-stat">2</div>
+          <div class="vs-label">${es?'Peacock + NOW TV Gratis':'Peacock + NOW TV Free'}</div>
         </div>
         <div class="vs-item">
           <div class="vs-icon vs-gold">
@@ -2619,7 +2478,7 @@ function renderIncludes(){
       </div>
     </div>` : ''}
 
-    ${savingsBanner ? banner + savingsBanner : banner}
+    ${banner}
 
     ${logoSection}`;
 }
@@ -2742,51 +2601,6 @@ const LOGO_SMARTHOME_DESC = `
   </div>`;
 
 
-function renderStreamingSavings(){
-  const box=document.getElementById('streaming-savings-box');
-  if(S.speed !== 'gig'){ box.style.display='none'; return; }
-  const rows=calcStreamingSavings();
-  if(rows.length===0){ box.style.display='none'; return; }
-
-  const totalSavings=rows.reduce((s,r)=>s+r.price,0);
-  const svcs=S.answers.svcs||[];
-  const autoEnabled = S.streamSaver && (svcs.includes('Netflix')||svcs.includes('Apple TV+'));
-  const streamSaverSavings = rows.filter(r=>r.source==='streamsaver').reduce((s,r)=>s+r.price,0);
-  const bundleSavings = rows.filter(r=>r.source==='bundle').reduce((s,r)=>s+r.price,0);
-
-  box.style.display='block';
-  box.innerHTML=`
-    <div class="savings-callout">
-      ${autoEnabled?`
-        <div class="ss-auto-notice">
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="none"><polyline points="4,13 9,18 20,7" stroke="#ffb700" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          ${t('Stream Saver auto-added — you already pay for services it covers')}
-        </div>`:''}
-      <div class="svc-save-title">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><polyline points="4,13 9,18 20,7" stroke="#00d46a" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        ${t('The more you bundle, the more you save')}
-      </div>
-      <div class="svc-save-rows">
-        ${rows.map(r=>`
-          <div class="svc-save-row">
-            <span>${r.name}
-              <span style="font-size:11px;color:var(--muted)">
-                ${r.source==='bundle'?t('✓ included in Gig bundle'):t('✓ included via Stream Saver')}
-              </span>
-            </span>
-            <span class="svc-save-val">$${r.price}/mo</span>
-          </div>`).join('')}
-      </div>
-      <div class="svc-save-total-row">
-        <div>
-          <div class="svc-save-total-label">${t('Services you can cancel')}</div>
-          ${streamSaverSavings>0&&bundleSavings>0?`<div style="font-size:11px;color:var(--muted);margin-top:2px;">Bundle: $${bundleSavings}/mo + Stream Saver: $${streamSaverSavings}/mo</div>`:''}
-        </div>
-        <span class="svc-save-total-val">$${totalSavings}/mo</span>
-      </div>
-    </div>`;
-}
-
 function scrollToTop(){ window.scrollTo({top:0,behavior:'instant'}); }
 
 /* Apply translations to all static customer-facing elements */
@@ -2809,19 +2623,29 @@ function applyTranslations(){
   if(fpl) fpl.textContent=t('5-Year Price Lock · No Contract · Unlimited Data');
   const fplbl=document.getElementById('footer-price-label-txt');
   if(fplbl) fplbl.textContent=t('Your monthly total');
-  // Stream Saver card
-  const ssTitle=document.getElementById('ss-bundle-title-txt');
-  if(ssTitle) ssTitle.textContent=t('NOW Stream Saver');
-  const ssSub=document.getElementById('ss-bundle-sub-txt');
-  if(ssSub) ssSub.textContent=t('Netflix + Apple TV+ + Peacock Premium — all in one add-on');
-  const ssStandalone=document.getElementById('ss-standalone-lbl');
-  if(ssStandalone) ssStandalone.textContent=t('Standalone cost');
-  const ssXfinity=document.getElementById('ss-xfinity-lbl');
-  if(ssXfinity) ssXfinity.textContent=t('With Xfinity');
-  const ssSave=document.getElementById('ss-save-txt');
-  if(ssSave) ssSave.textContent=t('Save $18/mo');
-  const ssEyebrow=document.getElementById('ss-bundle-eyebrow-txt');
-  if(ssEyebrow) ssEyebrow.textContent=t('The More You Bundle, The More You Save');
+  // Xfinity Pro card
+  const xproTitle=document.getElementById('xpro-title-txt');
+  if(xproTitle) xproTitle.textContent=t('Xfinity Pro');
+  const xproSub=document.getElementById('xpro-sub-txt');
+  if(xproSub) xproSub.textContent=t('Advanced coverage, network priority & backup connectivity');
+  const xproEyebrow=document.getElementById('xpro-eyebrow-txt');
+  if(xproEyebrow) xproEyebrow.innerHTML=`<svg width="11" height="11" viewBox="0 0 24 24" fill="#FFD700"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg> ${t('Premium Add-On — Optional Upgrade')}`;
+  const xproReq=document.getElementById('xpro-req-txt');
+  if(xproReq) xproReq.textContent=t('Requires Xfinity Gateway (XB7, XB8, or XB10)');
+  // Xfinity Pro feature tiles
+  const xproFeats={
+    'xpro-f1-h':['Device Boosting','Optimización de Dispositivos'],
+    'xpro-f1-s':['Prioritize bandwidth to gaming consoles or work laptops','Prioriza el ancho de banda a consolas de juegos o laptops de trabajo'],
+    'xpro-f2-h':['Seamless Mesh WiFi','WiFi Mesh Continuo'],
+    'xpro-f2-s':['Up to 2 WiFi extenders — wall-to-wall coverage, no dead zones','Hasta 2 extensores WiFi — cobertura total, sin zonas muertas'],
+    'xpro-f3-h':['Cellular Backup','Respaldo Celular'],
+    'xpro-f3-s':['4G LTE backup during outages — up to 30 Mbps down / 7 Mbps up','Respaldo 4G LTE durante apagones — hasta 30 Mbps de bajada / 7 Mbps de subida'],
+    'xpro-f4-h':['Battery Backup Ready','Listo para Batería de Respaldo'],
+    'xpro-f4-s':['Optional battery pack — up to 4 hours during a power outage','Paquete de batería opcional — hasta 4 horas durante un apagón'],
+  };
+  for(const [id,[en,esT]] of Object.entries(xproFeats)){
+    const el=document.getElementById(id); if(el) el.textContent=es?esT:en;
+  }
   // XM value card
   const xmEy=document.getElementById('xmv-eyebrow-txt');
   if(xmEy) xmEy.textContent=es?'Lo que obtienes con cada línea':'What You Get with Every Line';
@@ -2904,22 +2728,11 @@ function applyTranslations(){
 
 function setSpd(id){
   S.speed=id;
-  // Speed change can affect what's included free in the bundle vs needs Stream Saver
-  const smart = buildSmartStreamSaver();
-  S.streamSaver = smart.enabled;
-  S.activeSSBundle = smart.services;
   renderResult();
 }
 
-function toggleSS(){
-  S.streamSaver=!S.streamSaver;
-  if(S.streamSaver){
-    // Re-enabled — rebuild active bundle from customer's selections
-    const smart = buildSmartStreamSaver();
-    S.activeSSBundle = smart.enabled ? smart.services : [];
-    // If smart logic says no bundle makes sense, keep the toggle but use a default 2-service tier
-    if(!smart.enabled){ S.activeSSBundle = ['Netflix', 'Apple TV+']; }
-  }
+function togglePro(){
+  S.xfinityPro=!S.xfinityPro;
   renderResult();
 }
 
@@ -3008,23 +2821,23 @@ function renderMobPlanBar(){
   const sp=spObj(S.speed);
   const isExplore=S.mobMode==='explore';
   const base=bundleBase(S.speed,!isExplore);
-  const ss=ssPrice();
+  const pro=proPrice();
   const xmAmt=mobPrice(S.mobLines);
-  const total=base+ss+xmAmt;
+  const total=base+pro+xmAmt;
   const es=(S.answers.lang||'English')==='Español';
 
   // Build line items with clear, friendly labels
   let rows=[];
   if(isExplore){
-    rows.push({ l:es?`1,000 Mbps Internet Gig`:`1,000 Mbps Gig Internet`, v:`$70` });
+    rows.push({ l:es?`1,000 Mbps Internet Gig`:`1,000 Mbps Gig Internet`, v:`$50` });
   } else {
-    rows.push({ l:es?`${sp.display} Mbps Internet + Streaming + Cámara de Seguridad`:`${sp.display} Mbps Internet + Streaming Video + Smart Home Camera`, v:`$${sp.price+NOW_TV+SMART_HOME}` });
+    rows.push({ l:es?`${sp.display} Mbps Internet + Peacock + NOW TV + Cámara de Seguridad`:`${sp.display} Mbps Internet + Peacock + NOW TV + Smart Home Camera`, v:`$${sp.price+NOW_TV+SMART_HOME}` });
   }
-  if(!isExplore && ss>0) rows.push({ l:es?'NOW Stream Saver':'NOW Stream Saver', v:`+$${ss}` });
+  if(!isExplore && pro>0) rows.push({ l:'Xfinity Pro', v:`+$${pro}` });
   rows.push({ l:es?`Xfinity Mobile — ${S.mobLines} ${S.mobLines>1?'líneas':'línea'} Plus`:`Xfinity Mobile — ${S.mobLines} line${S.mobLines>1?'s':''} Plus`, v:`+$${xmAmt}` });
 
-  // Explore total uses just $70 internet + mobile
-  const exploreTotal = isExplore ? 70 + xmAmt : total;
+  // Explore total uses just $50 internet + mobile
+  const exploreTotal = isExplore ? 50 + xmAmt : total;
   const displayTotal = isExplore ? exploreTotal : total;
 
   const exploreBadge = isExplore ? `
@@ -3034,20 +2847,20 @@ function renderMobPlanBar(){
           ${es?'★ Mejor Valor — Cambia y Ahorra Más':'★ Best Value — Switch &amp; Save Big'}
         </div>
         <div style="font-family:'Barlow Condensed',sans-serif;font-size:28px;font-weight:900;color:#FFFFFF;line-height:1.15;text-shadow:0 4px 24px rgba(0,0,0,0.3);">
-          ${es?'Todo lo siguiente por solo':'Everything below for just'} <span style="color:#FFD700;">$70/mo</span>
+          ${es?'Todo lo siguiente por solo':'Everything below for just'} <span style="color:#FFD700;">$50/mo</span>
         </div>
         <div style="font-size:13px;color:rgba(255,255,255,0.75);margin-top:6px;line-height:1.45;">${es?'Cuando agregas Xfinity Mobile — los ahorros prácticamente se pagan solos':'When you add Xfinity Mobile — the savings practically pay for themselves'}</div>
       </div>
       <div style="padding:16px 20px;border-bottom:1px solid rgba(255,215,0,0.15);position:relative;z-index:1;">
-        <div style="font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:700;letter-spacing:0.25em;text-transform:uppercase;color:#FFD700;margin-bottom:12px;text-align:center;">${es?'Incluido en Internet 1 Gig — $70/mes':'Included in 1 Gig Internet — $70/mo'}</div>
+        <div style="font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:700;letter-spacing:0.25em;text-transform:uppercase;color:#FFD700;margin-bottom:12px;text-align:center;">${es?'Incluido en Internet 1 Gig — $50/mes':'Included in 1 Gig Internet — $50/mo'}</div>
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
           <div style="background:rgba(255,215,0,0.06);border:1px solid rgba(255,215,0,0.3);border-radius:12px;padding:14px 10px;text-align:center;backdrop-filter:blur(8px);">
             <div style="font-family:'Barlow Condensed',sans-serif;font-size:32px;font-weight:900;color:#FFD700;line-height:1;letter-spacing:0.5px;text-shadow:0 2px 12px rgba(255,215,0,0.3);">1,000</div>
             <div style="font-size:11px;color:rgba(255,255,255,0.75);margin-top:4px;font-weight:600;">${es?'Mbps — La más rápida disponible':'Mbps — Fastest Available'}</div>
           </div>
           <div style="background:rgba(255,215,0,0.06);border:1px solid rgba(255,215,0,0.3);border-radius:12px;padding:14px 10px;text-align:center;backdrop-filter:blur(8px);">
-            <div style="font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:900;color:#FFFFFF;line-height:1.25;">Disney+ · Hulu<br>Peacock</div>
-            <div style="font-size:11px;color:rgba(255,215,0,0.85);margin-top:6px;font-weight:600;">${es?'3 servicios de streaming incluidos':'3 streaming services included'}</div>
+            <div style="font-family:'Barlow Condensed',sans-serif;font-size:16px;font-weight:900;color:#FFFFFF;line-height:1.25;">Peacock</div>
+            <div style="font-size:11px;color:rgba(255,215,0,0.85);margin-top:6px;font-weight:600;">${es?'Streaming incluido':'Streaming included'}</div>
           </div>
           <div style="background:rgba(255,215,0,0.06);border:1px solid rgba(255,215,0,0.3);border-radius:12px;padding:14px 10px;text-align:center;backdrop-filter:blur(8px);">
             <div style="font-family:'Barlow Condensed',sans-serif;font-size:15px;font-weight:900;color:#FFFFFF;line-height:1.2;">${es?'Datos Ilimitados':'Unlimited Data'}</div>
@@ -3059,15 +2872,6 @@ function renderMobPlanBar(){
           </div>
         </div>
       </div>
-      <div style="padding:14px 20px;background:rgba(0,255,139,0.08);border-bottom:1px solid rgba(255,215,0,0.15);display:flex;justify-content:space-between;align-items:center;gap:10px;position:relative;z-index:1;">
-        <div style="font-size:12px;color:rgba(255,255,255,0.85);line-height:1.5;">
-          ${es?'Disney+, Hulu y Peacock solos cuestan <strong style="color:#FFFFFF;">$38/mes</strong> por separado — todos incluidos gratis con Gig':'Disney+, Hulu &amp; Peacock alone cost <strong style="color:#FFFFFF;">$38/mo</strong> separately — they\'re all included free with Gig'}
-        </div>
-        <div style="text-align:right;flex-shrink:0;">
-          <div style="font-family:'Barlow Condensed',sans-serif;font-size:24px;font-weight:900;color:#00FF8B;line-height:1;letter-spacing:0.5px;text-shadow:0 2px 12px rgba(0,255,139,0.4);">$38/mo</div>
-          <div style="font-size:10px;color:#00FF8B;opacity:0.85;font-weight:600;letter-spacing:0.05em;">${es?'ahorrado en streaming':'saved on streaming'}</div>
-        </div>
-      </div>
       <div style="padding:14px 20px;text-align:center;position:relative;z-index:1;">
         <div style="font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:700;letter-spacing:0.25em;text-transform:uppercase;color:#FFD700;margin-bottom:6px;">${es?'Agrega Xfinity Mobile y ahorra aún más':'Add Xfinity Mobile &amp; save even more'}</div>
         <div style="font-size:12px;color:rgba(255,255,255,0.75);line-height:1.5;">${es?'Cambia tus líneas y los ahorros podrían cubrir la mayor parte — o todo — tu costo de internet':'Switch your phone lines and the savings on your bill could cover most — or all — of your internet cost'}</div>
@@ -3076,7 +2880,7 @@ function renderMobPlanBar(){
 
   const noteText = isExplore
     ? (es?`Incluye internet 1,000 Mbps Gig y ${S.mobLines} ${S.mobLines>1?'líneas':'línea'} móvil`:`Includes 1,000 Mbps Gig internet &amp; ${S.mobLines} mobile line${S.mobLines>1?'s':''}`)
-    : (es?`Incluye internet, streaming${ss>0?', Stream Saver':''} y ${S.mobLines} ${S.mobLines>1?'líneas':'línea'} móvil`:`Includes internet, streaming video${ss>0?', Stream Saver':''} &amp; ${S.mobLines} mobile line${S.mobLines>1?'s':''}`);
+    : (es?`Incluye internet, Peacock, NOW TV${pro>0?', Xfinity Pro':''} y ${S.mobLines} ${S.mobLines>1?'líneas':'línea'} móvil`:`Includes internet, Peacock, NOW TV${pro>0?', Xfinity Pro':''} &amp; ${S.mobLines} mobile line${S.mobLines>1?'s':''}`);
 
   document.getElementById('mob-plan-bar').innerHTML=`
     ${exploreBadge}
@@ -3085,7 +2889,7 @@ function renderMobPlanBar(){
       <div class="pbg-left">
         <div class="pbg-eyebrow">${es?'★ Mejor Valor — Internet Gig':'★ Best Value — Gig Internet'}</div>
         <div class="pbg-title">${sp.display} Mbps ${S.speed==='gig'?'GIG ':'' }Plan</div>
-        <div class="pbg-sub">${es?'Disney+ · Hulu · Peacock · NOW TV · Cámara de Seguridad':'Disney+ · Hulu · Peacock · NOW TV · Smart Home Camera'}</div>
+        <div class="pbg-sub">${es?'Peacock · NOW TV · Cámara de Seguridad':'Peacock · NOW TV · Smart Home Camera'}</div>
       </div>
       <div class="pbg-price">
         <div class="pbg-amount">$${sp.price+NOW_TV+SMART_HOME}<span class="pbg-mo">/mo</span></div>
@@ -3188,11 +2992,11 @@ function buildRecap(){
   const isExplore=S.mobMode==='explore';
   const gigSp=spObj('gig');
   const base=isExplore?gigSp.price:(sp.price+NOW_TV+SMART_HOME);
-  const ss=ssPrice();
+  const pro=proPrice();
   const xmAmt=mobPrice(S.mobLines);
   const outcome=S.outcome||'signed_up';
   const includeMobile = outcome==='signed_up'; // only show mobile if customer agreed
-  const total = base + ss + (includeMobile ? xmAmt : 0);
+  const total = base + pro + (includeMobile ? xmAmt : 0);
   const a=S.answers;
 
   // Outcome badge
@@ -3218,11 +3022,11 @@ function buildRecap(){
 
   let planRows=[];
   if(isExplore){
-    planRows.push({l:'Internet',v:'1,000 Mbps Gig — $70/mo'});
+    planRows.push({l:'Internet',v:'1,000 Mbps Gig — $50/mo'});
   } else {
-    planRows.push({l:'Internet + Streaming + Smart Home',v:`${sp.display} Mbps — $${base}/mo`});
+    planRows.push({l:'Internet + Peacock + NOW TV + Smart Home',v:`${sp.display} Mbps — $${base}/mo`});
   }
-  if(ss>0) planRows.push({l:'NOW Stream Saver',v:`+$${ss}/mo`});
+  if(pro>0) planRows.push({l:'Xfinity Pro',v:`+$${pro}/mo`});
   if(includeMobile){
     planRows.push({l:`Xfinity Mobile (${S.mobLines} line${S.mobLines>1?'s':''})`,v:`+$${xmAmt}/mo`});
   } else {
@@ -3265,9 +3069,9 @@ async function submitToZapier(){
   const isExplore=S.mobMode==='explore';
   const gigSp=spObj('gig');
   const base=isExplore?gigSp.price:(sp.price+NOW_TV+SMART_HOME);
-  const ss=ssPrice();
+  const pro=proPrice();
   const xmAmt=mobPrice(S.mobLines);
-  const total=base+ss+xmAmt;
+  const total=base+pro+xmAmt;
   const savings=S.currentBill>0?Math.max(0,Math.round(S.currentBill-xmAmt)):0;
   const a=S.answers;
 
@@ -3285,8 +3089,8 @@ async function submitToZapier(){
     devices: a.devices||'',
     // Plan
     recommended_speed: sp.display+' Mbps',
-    internet_plan: isExplore?'Gig Internet Only ($70)':sp.display+' Mbps + Streaming + Smart Home ($'+base+')',
-    stream_saver: ss>0?'Yes ($'+ss+'/mo)':'No',
+    internet_plan: isExplore?'Gig Internet Only ($50)':sp.display+' Mbps + Peacock + NOW TV + Smart Home ($'+base+')',
+    xfinity_pro: pro>0?'Yes ($'+pro+'/mo)':'No',
     xfinity_mobile_lines: S.mobLines,
     xfinity_mobile_price: '$'+xmAmt+'/mo',
     monthly_total: '$'+total+'/mo',
@@ -3294,10 +3098,11 @@ async function submitToZapier(){
     previous_carrier: S.carrier||'',
     previous_bill: S.currentBill>0?'$'+S.currentBill+'/mo':'',
     estimated_monthly_savings: savings>0?'$'+savings+'/mo':'',
-    estimated_yearly_savings: savings>0?'$'+(savings*12).toLocaleString():'',
+    estimated_first_year_savings: savings>0?'$'+(savings*12).toLocaleString():'',
+    language: S.answers.lang||'English',
   };
 
-  const SHEETS_WEBHOOK = 'https://script.google.com/macros/s/AKfycbxEehuxYvy1HD6NeSf-phnZKUitvWveqB_ncKu9lEDl-KNPVxhQCbRyi0A1fzgmva6w/exec';
+  const SHEETS_WEBHOOK = 'https://script.google.com/macros/s/AKfycbx1KvO1biNAyLTbKKOK_kxob-4XBWKnOxq986mlmOUjNOLLcCKdxQrmS5b6pn9y7Dhx/exec';
 
   const btn=document.getElementById('btn-submit-recap');
   const status=document.getElementById('rep-submit-status');
