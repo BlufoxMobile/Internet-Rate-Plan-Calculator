@@ -3155,6 +3155,10 @@ renderQuiz();
 
 
 
+
+
+
+
 <!-- BLUFOX_ROSTER_DROPDOWNS_V1 : roster-driven Store + Rep dropdowns (auto-added) -->
 <script>
 (function(){
@@ -3177,6 +3181,7 @@ renderQuiz();
     if(!storeSel||!repEl) return;
     var roster={}, ready=false, rosterLoaded=false;
     var NEW_HIRE='New Hire';
+    var DM_OPT='DM or Director Submission';
     var lastStore = gL(CFG.lsStore) || storeSel.value || '';
     var lastRep   = gL(CFG.lsRep)   || (repEl.value||'').trim() || '';
     var repClass  = repEl.className || '';
@@ -3203,6 +3208,9 @@ renderQuiz();
       el.disabled=true; if(repClass) el.className=repClass; attach(el);
     }
     function repList(reps){
+      // Ensure the two catch-alls are always present at the very bottom, in order.
+      reps = reps.filter(function(n){ return n!==NEW_HIRE && n!==DM_OPT; });
+      reps.push(NEW_HIRE); reps.push(DM_OPT);
       var opts='<option value="">— Select your name —</option>';
       reps.forEach(function(n){ opts+='<option'+(n===lastRep?' selected':'')+'>'+esc(n)+'</option>'; });
       var el=buildRep('<select id="'+CFG.repId+'"'+nameAttr()+' autocomplete="name">'+opts+'</select>');
@@ -3219,9 +3227,8 @@ renderQuiz();
       if(isSpecial(sv)){ repFree(); return; }              // e.g. "DM Submission"
       if(!ready){ repPlaceholder('— Loading names… —'); return; }
       if(!rosterLoaded){ repFree(); return; }              // data unreachable -> type exact name
-      var reps=(roster[toFull(sv)]||[]).slice();
-      if(reps.indexOf(NEW_HIRE)===-1) reps.push(NEW_HIRE); // always offer "New Hire"
-      repList(reps);
+      // repList guarantees "New Hire" + "DM or Director Submission" at the bottom.
+      repList((roster[toFull(sv)]||[]).slice());
     }
     function fillStores(fullStores){
       var keep=storeSel.value;
