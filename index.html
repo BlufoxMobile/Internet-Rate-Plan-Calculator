@@ -1920,7 +1920,7 @@ const S = {
    PRICING
 ══════════════════════════════════ */
 const SPEEDS = [
-  { id:'gig', label:'GIG',  mbps:'1,000 Mbps', display:'1,000', price:50, bestValue:true },
+  { id:'gig', label:'GIG',  mbps:'1,000 Mbps', display:'1,000', price:70, bestValue:true },
   { id:'300', label:'300',  mbps:'300 Mbps',   display:'300',   price:45 },
   { id:'500', label:'500',  mbps:'500 Mbps',   display:'500',   price:60 },
 ];
@@ -1932,7 +1932,7 @@ const SVC_PRICES = {
   'Prime Video': 9, 'Peacock': 6, 'HBO Max / Max': 16
 };
 
-// Services included free in the base Gig bundle (Peacock + NOW TV come via the $50 Gig + $20 NOW TV + $10 Cam = $80)
+// Services included free in the base Gig bundle (Peacock + NOW TV come via the $70 Gig + $20 NOW TV + $15 Cam = $105)
 // As of the latest changes, Disney+/Hulu are NO LONGER included free.
 const BUNDLE_INCLUDED = ['Peacock'];
 
@@ -2034,7 +2034,7 @@ const ES = {
   '★ Best Value — Switch & Save Big': '★ Mejor Valor — Cambia y Ahorra Más',
   'Everything below for just ': 'Todo lo siguiente por solo ',
   'When you add Xfinity Mobile — the savings practically pay for themselves': 'Cuando agregas Xfinity Mobile — los ahorros prácticamente se pagan solos',
-  'Included in 1 Gig Internet — $50/mo': 'Incluido en Internet 1 Gig — $50/mes',
+  'Included in 1 Gig Internet — $70/mo': 'Incluido en Internet 1 Gig — $70/mes',
   'Mbps — Fastest Available': 'Mbps — La más rápida disponible',
   '4 streaming services included': '4 servicios de streaming incluidos',
   '24/7 HD security included': 'Seguridad HD 24/7 incluida',
@@ -2829,15 +2829,15 @@ function renderMobPlanBar(){
   // Build line items with clear, friendly labels
   let rows=[];
   if(isExplore){
-    rows.push({ l:es?`1,000 Mbps Internet Gig`:`1,000 Mbps Gig Internet`, v:`$50` });
+    rows.push({ l:es?`1,000 Mbps Internet Gig`:`1,000 Mbps Gig Internet`, v:`$${sp.price}` });
   } else {
     rows.push({ l:es?`${sp.display} Mbps Internet + Peacock + NOW TV + Cámara de Seguridad`:`${sp.display} Mbps Internet + Peacock + NOW TV + Smart Home Camera`, v:`$${sp.price+NOW_TV+SMART_HOME}` });
   }
   if(!isExplore && pro>0) rows.push({ l:'Xfinity Pro', v:`+$${pro}` });
   rows.push({ l:es?`Xfinity Mobile — ${S.mobLines} ${S.mobLines>1?'líneas':'línea'} Plus`:`Xfinity Mobile — ${S.mobLines} line${S.mobLines>1?'s':''} Plus`, v:`+$${xmAmt}` });
 
-  // Explore total uses just $50 internet + mobile
-  const exploreTotal = isExplore ? 50 + xmAmt : total;
+  // Explore total uses just Gig internet + mobile
+  const exploreTotal = isExplore ? sp.price + xmAmt : total;
   const displayTotal = isExplore ? exploreTotal : total;
 
   const exploreBadge = isExplore ? `
@@ -2847,12 +2847,12 @@ function renderMobPlanBar(){
           ${es?'★ Mejor Valor — Cambia y Ahorra Más':'★ Best Value — Switch &amp; Save Big'}
         </div>
         <div style="font-family:'Barlow Condensed',sans-serif;font-size:28px;font-weight:900;color:#FFFFFF;line-height:1.15;text-shadow:0 4px 24px rgba(0,0,0,0.3);">
-          ${es?'Todo lo siguiente por solo':'Everything below for just'} <span style="color:#FFD700;">$50/mo</span>
+          ${es?'Todo lo siguiente por solo':'Everything below for just'} <span style="color:#FFD700;">$${sp.price}/mo</span>
         </div>
         <div style="font-size:13px;color:rgba(255,255,255,0.75);margin-top:6px;line-height:1.45;">${es?'Cuando agregas Xfinity Mobile — los ahorros prácticamente se pagan solos':'When you add Xfinity Mobile — the savings practically pay for themselves'}</div>
       </div>
       <div style="padding:16px 20px;border-bottom:1px solid rgba(255,215,0,0.15);position:relative;z-index:1;">
-        <div style="font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:700;letter-spacing:0.25em;text-transform:uppercase;color:#FFD700;margin-bottom:12px;text-align:center;">${es?'Incluido en Internet 1 Gig — $50/mes':'Included in 1 Gig Internet — $50/mo'}</div>
+        <div style="font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:700;letter-spacing:0.25em;text-transform:uppercase;color:#FFD700;margin-bottom:12px;text-align:center;">${es?`Incluido en Internet 1 Gig — $${sp.price}/mes`:`Included in 1 Gig Internet — $${sp.price}/mo`}</div>
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
           <div style="background:rgba(255,215,0,0.06);border:1px solid rgba(255,215,0,0.3);border-radius:12px;padding:14px 10px;text-align:center;backdrop-filter:blur(8px);">
             <div style="font-family:'Barlow Condensed',sans-serif;font-size:32px;font-weight:900;color:#FFD700;line-height:1;letter-spacing:0.5px;text-shadow:0 2px 12px rgba(255,215,0,0.3);">1,000</div>
@@ -3022,7 +3022,7 @@ function buildRecap(){
 
   let planRows=[];
   if(isExplore){
-    planRows.push({l:'Internet',v:'1,000 Mbps Gig — $50/mo'});
+    planRows.push({l:'Internet',v:`1,000 Mbps Gig — $${gigSp.price}/mo`});
   } else {
     planRows.push({l:'Internet + Peacock + NOW TV + Smart Home',v:`${sp.display} Mbps — $${base}/mo`});
   }
@@ -3089,7 +3089,7 @@ async function submitToZapier(){
     devices: a.devices||'',
     // Plan
     recommended_speed: sp.display+' Mbps',
-    internet_plan: isExplore?'Gig Internet Only ($50)':sp.display+' Mbps + Peacock + NOW TV + Smart Home ($'+base+')',
+    internet_plan: isExplore?'Gig Internet Only ($'+gigSp.price+')':sp.display+' Mbps + Peacock + NOW TV + Smart Home ($'+base+')',
     xfinity_pro: pro>0?'Yes ($'+pro+'/mo)':'No',
     xfinity_mobile_lines: S.mobLines,
     xfinity_mobile_price: '$'+xmAmt+'/mo',
