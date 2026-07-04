@@ -3102,6 +3102,13 @@ async function submitToZapier(){
     language: S.answers.lang||'English',
   };
 
+  // Posts to the SAME Apps Script the T-Sheet-Submissions tracker reads from
+  // (deploy of internet-quote-sheets-apps-script.gs). Changed 2026-06-30: the
+  // calculator had been pointing at a separate "Xfinity Calculator webhook"
+  // script whose sheet the tracker never reads, so submissions stopped showing
+  // up in the tracker after ~June 4. Verified this endpoint accepts the POST
+  // and the row appears in the tracker. — Do not repoint without updating the
+  // tracker's QUOTE_SCRIPT_URL to match.
   const SHEETS_WEBHOOK = 'https://script.google.com/macros/s/AKfycbxEehuxYvy1HD6NeSf-phnZKUitvWveqB_ncKu9lEDl-KNPVxhQCbRyi0A1fzgmva6w/exec';
 
   const btn=document.getElementById('btn-submit-recap');
@@ -3165,7 +3172,9 @@ renderQuiz();
   if (window.__BLUFOX_ROSTER__) return; window.__BLUFOX_ROSTER__ = true;
   var CFG = {"storeId": "rep-store", "repId": "rep-name", "repNameAttr": null, "fieldSel": ".rep-field", "shortStores": true, "lsStore": "xfc_rep_store", "lsRep": "xfc_rep_name", "onStoreChange": "checkSubmitReady", "onRepChange": "checkSubmitReady"};
   var DIR='https://raw.githubusercontent.com/BlufoxMobile/Daily-Sales-Report/main/data/store-directory.json';
+  var DIRP='https://blufoxmobile.github.io/Daily-Sales-Report/data/store-directory.json';
   var RST='https://raw.githubusercontent.com/BlufoxMobile/Daily-Sales-Report/main/data/rep-roster.json';
+  var RSTP='https://blufoxmobile.github.io/Daily-Sales-Report/data/rep-roster.json';
   function L(){try{return window.localStorage}catch(e){return null}}
   function gL(k){var s=L();try{return s?s.getItem(k):null}catch(e){return null}}
   function sL(k,v){var s=L();try{if(s)s.setItem(k,v)}catch(e){}}
@@ -3228,7 +3237,7 @@ renderQuiz();
       if(!ready){ repPlaceholder('— Loading names… —'); return; }
       if(!rosterLoaded){ repFree(); return; }              // data unreachable -> type exact name
       // repList guarantees "New Hire" + "DM or Director Submission" at the bottom.
-      repList((roster[toFull(sv)]||[]).slice());
+      repList((roster[toFull(sv)]||roster[sv]||[]).slice());
     }
     function fillStores(fullStores){
       var keep=storeSel.value;
@@ -3247,9 +3256,18 @@ renderQuiz();
     refreshRep(); call(CFG.onStoreChange);
 
     var bust='?d='+new Date().toISOString().slice(0,10);
-    jget(DIR+bust).then(function(d){ if(d&&d.stores&&d.stores.length){ fillStores(d.stores); refreshRep(); call(CFG.onStoreChange); } }).catch(function(){});
-    jget(RST+bust).then(function(r){ roster=(r&&r.byStore)||{}; ready=true; rosterLoaded=true; refreshRep(); call(CFG.onStoreChange); })
-                  .catch(function(){ ready=true; refreshRep(); call(CFG.onStoreChange); });
+    function settle(p){ return p.then(function(v){ return v; }, function(){ return null; }); }
+    jget(DIR+bust).catch(function(){ return jget(DIRP+bust); })
+      .then(function(d){ if(d&&d.stores&&d.stores.length){ fillStores(d.stores); refreshRep(); call(CFG.onStoreChange); } }).catch(function(){});
+    // The roster lives in two places: the git copy (raw.githubusercontent) and the
+    // GitHub Pages deploy copy. A workflow hiccup can leave either one stale, so
+    // fetch both and keep whichever has the newest updatedAt stamp.
+    Promise.all([settle(jget(RST+bust)), settle(jget(RSTP+bust))]).then(function(rs){
+      var best=null;
+      rs.forEach(function(r){ if(r&&r.byStore&&(!best||String(r.updatedAt||'')>String(best.updatedAt||''))) best=r; });
+      if(best){ roster=best.byStore||{}; rosterLoaded=true; }
+      ready=true; refreshRep(); call(CFG.onStoreChange);
+    });
   }
   // Put Store before Rep so reps pick their store first (runs immediately, no flicker).
   function reorder(){
