@@ -1868,6 +1868,12 @@ body { font-family: 'Barlow', sans-serif; background: var(--black); color: var(-
           <option>Valparaiso</option>
         </select>
       </div>
+      <div class="rep-field">
+        <label class="rep-label">Your Email</label>
+        <select class="rep-select" id="rep-email">
+          <option value="">— Select your store first —</option>
+        </select>
+      </div>
 
       <div class="rep-submit-status" id="rep-submit-status"></div>
 
@@ -3065,6 +3071,7 @@ function checkSubmitReady(){
 async function submitToZapier(){
   const repName=document.getElementById('rep-name').value.trim();
   const repStore=document.getElementById('rep-store').value;
+  const repEmail=((document.getElementById('rep-email')||{}).value||'').trim();
   const sp=spObj(S.speed);
   const isExplore=S.mobMode==='explore';
   const gigSp=spObj('gig');
@@ -3079,6 +3086,7 @@ async function submitToZapier(){
     submitted_at: new Date().toLocaleString('en-US',{timeZone:'America/Chicago'}),
     submission_date: new Date().toLocaleDateString('en-US',{timeZone:'America/Chicago'}),
     rep_name: repName,
+    rep_email: repEmail,
     store: repStore,
     outcome: S.outcome==='signed_up'?'Signed Up':'No Thanks',
     // Customer info
@@ -3282,6 +3290,81 @@ renderQuiz();
   }
   try{ reorder(); }catch(e){}
   function boot(){ try{ reorder(); }catch(e){} setTimeout(go, 250); }
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded', boot); else boot();
+})();
+</script>
+
+<!-- BLUFOX_REP_EMAIL_DROPDOWN_V2 : store-filtered rep email picker (auto-added) -->
+<script>
+(function(){
+  if (window.__BLUFOX_REPEMAIL__) return; window.__BLUFOX_REPEMAIL__ = true;
+  var DIR = 'https://raw.githubusercontent.com/BlufoxMobile/Daily-Sales-Report/main/data/store-directory.json';
+  var DIRP = 'https://blufoxmobile.github.io/Daily-Sales-Report/data/store-directory.json';
+  var SUFFIX = ' Xfinity Store';
+  var LS_KEY = 'xfc_rep_email';
+  function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+  function jget(u){ return fetch(u,{cache:'no-store'}).then(function(r){ if(!r.ok) throw 0; return r.json(); }); }
+  function gL(k){ try{ return localStorage.getItem(k); }catch(e){ return null; } }
+  function sL(k,v){ try{ localStorage.setItem(k,v); }catch(e){} }
+
+  var byStore = {};   // full store name -> [{email,name}] (reps from storeEmployees + manager + DM)
+  var loaded = false;
+
+  function init(){
+    var sel = document.getElementById('rep-email');
+    var storeEl = document.getElementById('rep-store');
+    if(!sel || !storeEl) return;
+
+    function listFor(short){ return byStore[short + SUFFIX] || byStore[short] || []; }
+    function autoPick(){
+      var el = document.getElementById('rep-name');
+      var n = el ? (el.value||'').trim().toLowerCase() : '';
+      if(!n) return;
+      var L = listFor(storeEl.value);
+      for(var i=0;i<L.length;i++){ if(L[i].name && L[i].name.toLowerCase()===n){ sel.value = L[i].email; sL(LS_KEY, L[i].email); return; } }
+    }
+    function build(){
+      var store = storeEl.value;
+      var keep = sel.value || gL(LS_KEY) || '';
+      if(!store){ sel.innerHTML = '<option value="">— Select your store first —</option>'; sel.disabled = true; return; }
+      if(!loaded){ sel.innerHTML = '<option value="">— Loading emails… —</option>'; sel.disabled = true; return; }
+      sel.disabled = false;
+      var L = listFor(store);
+      var html = '<option value="">— Select your email —</option>';
+      L.forEach(function(o){ html += '<option value="'+esc(o.email)+'">'+esc(o.email)+'</option>'; });
+      sel.innerHTML = html;
+      if(keep){ sel.value = keep; if(sel.value !== keep) sel.value = ''; }
+      if(!sel.value) autoPick();
+    }
+    sel.addEventListener('change', function(){ if(sel.value) sL(LS_KEY, sel.value); });
+    storeEl.addEventListener('change', build);
+    // The rep-name element is rebuilt by the roster dropdown script, so listen at document level.
+    document.addEventListener('change', function(ev){ if(ev.target && ev.target.id==='rep-name' && !sel.value) autoPick(); });
+    build();
+
+    var bust = '?d=' + new Date().toISOString().slice(0,10);
+    jget(DIR + bust).catch(function(){ return jget(DIRP + bust); }).then(function(d){
+      var emp = (d&&d.storeEmployees) || {};
+      var mgr = (d&&d.storeManagers) || {};
+      var dm  = (d&&d.storeDMs) || {};
+      var stores = {};
+      [emp,mgr,dm].forEach(function(o){ Object.keys(o).forEach(function(s){ stores[s]=1; }); });
+      Object.keys(stores).forEach(function(s){
+        var seen={}, out=[];
+        (emp[s]||[]).forEach(function(e){
+          var email = (e && typeof e==='object') ? (e.email||'') : e;
+          var name  = (e && typeof e==='object') ? ((e.first||'')+' '+(e.last||'')).trim() : '';
+          if(!email) return; var k=String(email).toLowerCase(); if(!seen[k]){ seen[k]=1; out.push({email:email, name:name}); }
+        });
+        [mgr[s],dm[s]].forEach(function(email){ if(!email) return; var k=String(email).toLowerCase(); if(!seen[k]){ seen[k]=1; out.push({email:email, name:''}); } });
+        out.sort(function(a,b){ return a.email.toLowerCase().localeCompare(b.email.toLowerCase()); });
+        byStore[s]=out;
+      });
+      loaded = true;
+      build();
+    }).catch(function(){ loaded = true; build(); });
+  }
+  function boot(){ setTimeout(init, 450); }
   if(document.readyState==='loading') document.addEventListener('DOMContentLoaded', boot); else boot();
 })();
 </script>
