@@ -1926,7 +1926,7 @@ const S = {
    PRICING
 ══════════════════════════════════ */
 const SPEEDS = [
-  { id:'gig', label:'GIG',  mbps:'1,000 Mbps', display:'1,000', price:70, bestValue:true },
+  { id:'gig', label:'GIG',  mbps:'1,000 Mbps', display:'1,000', price:50, bestValue:true },
   { id:'300', label:'300',  mbps:'300 Mbps',   display:'300',   price:45 },
   { id:'500', label:'500',  mbps:'500 Mbps',   display:'500',   price:60 },
 ];
@@ -1938,7 +1938,7 @@ const SVC_PRICES = {
   'Prime Video': 9, 'Peacock': 6, 'HBO Max / Max': 16
 };
 
-// Services included free in the base Gig bundle (Peacock + NOW TV come via the $70 Gig + $20 NOW TV + $15 Cam = $105)
+// Services included free in the base Gig bundle (Peacock + NOW TV come via the $50 Gig + $20 NOW TV + $15 Cam = $85)
 // As of the latest changes, Disney+/Hulu are NO LONGER included free.
 const BUNDLE_INCLUDED = ['Peacock'];
 
@@ -1969,7 +1969,6 @@ const Qs = [
   { id:'name',    type:'text',   cat:'Welcome',            text:"What is your customer's name?",  textES:"¿Cuál es el nombre de tu cliente?", ph:'Enter their first name...', phES:'Ingresa su nombre...' },
   { id:'people',  type:'single', cat:'Your Household',     text:'How many people live in your home?',                  opts:['Just me','2 people','3 to 4 people','5 to 6 people','7 or more'] },
   { id:'usage',   type:'multi',  cat:'How You\'ll Use It', text:'What will you mainly use the internet for?',          opts:['Streaming','Gaming','Schoolwork','Working from home','Smart home devices','Security cameras'], skip:true },
-  { id:'svcs',    type:'multi',  cat:'Your Streaming',     text:'Which streaming services do you currently pay for?',  opts:['Netflix','Hulu','Disney+','Apple TV+','Prime Video','Peacock','HBO Max / Max','Other','None'], skip:true },
   { id:'devices', type:'single', cat:'Your Devices',       text:'How many devices will you connect to the internet?',  opts:['1 to 3 devices','4 to 5 devices','6 to 12 devices','13 to 20 devices','More than 20'] }
 ];
 
@@ -2040,7 +2039,7 @@ const ES = {
   '★ Best Value — Switch & Save Big': '★ Mejor Valor — Cambia y Ahorra Más',
   'Everything below for just ': 'Todo lo siguiente por solo ',
   'When you add Xfinity Mobile — the savings practically pay for themselves': 'Cuando agregas Xfinity Mobile — los ahorros prácticamente se pagan solos',
-  'Included in 1 Gig Internet — $70/mo': 'Incluido en Internet 1 Gig — $70/mes',
+  'Included in 1 Gig Internet — $50/mo': 'Incluido en Internet 1 Gig — $50/mes',
   'Mbps — Fastest Available': 'Mbps — La más rápida disponible',
   '4 streaming services included': '4 servicios de streaming incluidos',
   '24/7 HD security included': 'Seguridad HD 24/7 incluida',
@@ -2072,11 +2071,9 @@ const ES = {
   'Language / Idioma': 'Language / Idioma',
   'Your Household': 'Tu Hogar',
   'How You\'ll Use It': 'Cómo lo Usarás',
-  'Your Streaming': 'Tus Servicios',
   'Your Devices': 'Tus Dispositivos',
   'How many people live in your home?': '¿Cuántas personas viven en tu hogar?',
   'What will you mainly use the internet for?': '¿Para qué usarás principalmente el internet?',
-  'Which streaming services do you currently pay for?': '¿Por cuáles servicios de streaming pagas actualmente?',
   'How many devices will you connect to the internet?': '¿Cuántos dispositivos conectarás al internet?',
   // Quiz options
   'Just me': 'Solo yo',
@@ -3022,7 +3019,6 @@ function buildRecap(){
     {l:'Customer Name',v:a.name||'—'},
     {l:'Household Size',v:a.people||'—'},
     {l:'Primary Uses',v:(a.usage&&a.usage.length)?a.usage.join(', '):'—'},
-    {l:'Current Streaming',v:(a.svcs&&a.svcs.length)?a.svcs.join(', '):'—'},
     {l:'Devices',v:a.devices||'—'},
   ];
 
@@ -3093,7 +3089,7 @@ async function submitToZapier(){
     customer_name: a.name||'',
     household_size: a.people||'',
     primary_uses: (a.usage||[]).join(', '),
-    current_streaming: (a.svcs||[]).join(', '),
+    current_streaming: '', // question removed from quiz — key kept so tracker columns stay aligned
     devices: a.devices||'',
     // Plan
     recommended_speed: sp.display+' Mbps',
