@@ -403,6 +403,24 @@ button,input,select{font-family:inherit}
 .pro-add-t{font-family:var(--disp);font-size:14.5px;font-weight:800;color:var(--txt);flex:1}
 .pro-card.on .pro-add-t{color:#3D2800}
 .pro-total{font-family:var(--disp);font-size:14px;font-weight:900;color:#8A5A00;flex:none}
+/* Whole Home Bundle add-on card (comparison screen) — purple variant of the Pro card */
+.pro-card.bnd{background:linear-gradient(140deg,#FCFAFF 0%,#F1E9FF 48%,#FEFDFF 100%);border-color:#7B3FE4;
+  box-shadow:0 14px 38px rgba(123,63,228,.22),0 0 0 1px rgba(123,63,228,.08)}
+.pro-card.bnd .pro-ic{background:linear-gradient(135deg,#7B3FE4,#5422BA);box-shadow:0 7px 18px rgba(84,34,186,.35)}
+.pro-card.bnd .pro-eye{color:#5422BA}
+.pro-card.bnd .pro-price-n{color:#5422BA}
+.pro-card.bnd .pro-price-l{color:#7B3FE4}
+.pro-card.bnd .pro-ben{border-color:rgba(123,63,228,.26)}
+.pro-card.bnd .pro-add{border-color:rgba(123,63,228,.4)}
+.pro-card.bnd .pro-add:hover{border-color:#7B3FE4}
+.pro-card.bnd.on .pro-add{background:linear-gradient(135deg,#7B3FE4,#5422BA);border-color:#5422BA;box-shadow:0 8px 22px rgba(123,63,228,.32)}
+.pro-card.bnd .pro-sw{background:#DCD2F0}
+.pro-card.bnd.on .pro-sw{background:rgba(255,255,255,.5)}
+.pro-card.bnd.on .pro-thumb{background:#5422BA}
+.pro-card.bnd.on .pro-add-t{color:#fff}
+.pro-card.bnd .pro-total{color:#5422BA}
+.pro-card.bnd.on .pro-total{color:#FFE9A8}
+.pro-card.bnd .pro-save{margin-top:11px;text-align:center;font-size:11.5px;font-weight:700;color:#5422BA;position:relative;z-index:2}
 
 /* ── XFINITY MOBILE FLOW — light, flyer-matched ────── */
 #mobile-screen,#compare-screen{background:var(--page)}
@@ -787,6 +805,7 @@ button,input,select{font-family:inherit}
     </div>
 
     <div id="xc-total"></div>
+    <div id="xc-bundle"></div>
     <div id="xc-pro"></div>
     <div class="mp-box" id="xc-mp"></div>
     <div id="xc-vs"></div>
@@ -956,7 +975,7 @@ const PEOPLE_N={'Just me':1,'2 people':2,'3 to 4 people':4,'5 to 6 people':6,'7 
 
 /* ── STATE ──────────────────────────────────────────── */
 const S={ answers:{}, step:0, speed:'gig', manual:false, pro:false,
-  carrier:'', mobLines:1, ipad:false, currentBill:0, xmSpeed:'gig', xmPro:false, outcome:null, reasons:[] };
+  carrier:'', mobLines:1, ipad:false, currentBill:0, xmSpeed:'gig', xmPro:false, xmBundle:false, outcome:null, reasons:[] };
 
 /* ── QUIZ ───────────────────────────────────────────── */
 const Qs=[
@@ -1150,7 +1169,7 @@ const XM_SPEED='gig';
 function xmPlan(){ return sp(S.xmSpeed||XM_SPEED); }
 function mobCost(n){ return n<=0?0:MOB_FIRST+(n-1)*MOB_ADD; }
 function mobYr2(n){ return n*MOB_YR2; }
-function xfTotal(){ return xmPlan().promo+mobCost(S.mobLines)+(S.ipad?IPAD_TOTAL:0)+(S.xmPro?PRO:0); }
+function xfTotal(){ return xmPlan().promo+mobCost(S.mobLines)+(S.ipad?IPAD_TOTAL:0)+(S.xmPro?PRO:0)+(S.xmBundle?NOW_TV+SHIELD:0); }
 function hhTotal(){ return xfTotal(); }
 function todayTotal(){ return S.currentBill||0; }
 function hasLine(){ return S.mobLines>0 || S.ipad; }
@@ -1225,10 +1244,15 @@ function goCompare(){
   requestAnimationFrame(()=>{ const r=document.querySelector('#xc-rows .fl-row.rec');
     if(r) r.scrollIntoView({behavior:'smooth',block:'center'}); });
 }
-function toggleXmPro(){
-  S.xmPro=!S.xmPro; renderCompare(); applyTranslations();
+function toggleXmBundle(){
+  S.xmBundle=!S.xmBundle; renderCompare(); applyTranslations(); pulseTotal();
+}
+function pulseTotal(){
   var c=document.querySelector('#xc-total .xc-tot');
   if(c){ c.classList.remove('pulse'); void c.offsetWidth; c.classList.add('pulse'); }
+}
+function toggleXmPro(){
+  S.xmPro=!S.xmPro; renderCompare(); applyTranslations(); pulseTotal();
 }
 function pickXm(id){
   if(id===(S.xmSpeed||XM_SPEED)) return;
@@ -1238,7 +1262,7 @@ function pickXm(id){
 }
 
 function renderCompare(){
-  const cur=xmPlan(), mob=mobCost(S.mobLines), ip=S.ipad?IPAD_TOTAL:0, pro=S.xmPro?PRO:0;
+  const cur=xmPlan(), mob=mobCost(S.mobLines), ip=S.ipad?IPAD_TOTAL:0, pro=S.xmPro?PRO:0, bnd=S.xmBundle?NOW_TV+SHIELD:0;
   const lineTxt=n=>n+' '+t(n===1?'line':'lines');
   document.getElementById('xc-th3s').textContent = S.mobLines>0
     ? lineTxt(S.mobLines)+' · Mobile Plus' : t('iPad data line');
@@ -1268,14 +1292,37 @@ function renderCompare(){
   let parts=[t('Internet')+' <b>'+money(cur.promo)+'</b>'];
   if(S.mobLines>0) parts.push(lineTxt(S.mobLines)+' <b>'+money(mob)+'</b>');
   if(ip) parts.push(t('iPad')+' <b>'+money(IPAD_TOTAL)+'</b>');
+  if(bnd) parts.push(t('NOW TV')+' + '+t('Xfinity Shield')+' <b>'+money(bnd)+'</b>');
   if(pro) parts.push(t('Xfinity Pro')+' <b>'+money(PRO)+'</b>');
   document.getElementById('xc-total').innerHTML=
     '<div class="xc-tot"><div class="xc-tot-in">'
      +'<div class="xc-tot-l"><div class="xc-tot-e">'+t('Your Xfinity Mobile Bundle')+'</div>'
        +'<div class="xc-tot-parts">'+parts.join(' &nbsp;+&nbsp; ')+'</div></div>'
-     +'<div class="xc-tot-r"><div class="xc-tot-n">'+money(cur.promo+mob+ip+pro)+'</div>'
+     +'<div class="xc-tot-r"><div class="xc-tot-n">'+money(xfTotal())+'</div>'
        +'<div class="xc-tot-mo">'+t('per month, with autopay & paperless billing')+'</div></div>'
     +'</div></div>';
+
+  /* Whole Home Bundle add-on — the biggest lever on this screen, so it sits
+     directly under the total and toggles without leaving the comparison. */
+  const bb=[SVC.nowtv.b[1],SVC.nowtv.b[0],SVC.shield.b[0],SVC.shield.b[2]];
+  document.getElementById('xc-bundle').innerHTML=
+    '<div class="pro-card bnd'+(S.xmBundle?' on':'')+'" id="xc-bundle-card">'
+    +'<div class="pro-head">'
+      +'<div class="pro-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"><rect x="2" y="4" width="20" height="13" rx="2"/><path d="M8 21h8M12 17v4"/></svg></div>'
+      +'<div class="pro-htxt"><div class="pro-eye">'+t('Complete The Bundle')+'</div><div class="pro-t">'+t('NOW TV')+' + '+t('Xfinity Shield')+'</div></div>'
+      +'<div class="pro-price"><div class="pro-price-n">+'+money(NOW_TV+SHIELD)+'</div><div class="pro-price-l">'+t('per month')+'</div></div>'
+    +'</div>'
+    +'<div class="pro-sub">'+t('TV and home protection for the price of one streaming app — Peacock alone is about $11 of it.')+'</div>'
+    +'<div class="pro-bens">'+bb.map(function(x){ return '<div class="pro-ben">'
+      +'<svg width="15" height="15" viewBox="0 0 24 24" fill="none"><polyline points="4,13 9,18 20,7" stroke="#7B3FE4" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/></svg>'
+      +'<div class="pro-ben-t">'+t(x)+'</div></div>'; }).join('')+'</div>'
+    +'<div class="pro-add" onclick="toggleXmBundle()">'
+      +'<div class="pro-sw"><div class="pro-thumb"></div></div>'
+      +'<div class="pro-add-t">'+(S.xmBundle?t('Added to your plan'):t('Add the bundle'))+'</div>'
+      +'<div class="pro-total">'+(S.xmBundle?t('New total')+' '+money(xfTotal())+'/'+t('mo'):'')+'</div>'
+    +'</div>'
+    +'<div class="pro-save">'+t('No annual contract — it rides along with the internet rate.')+'</div>'
+    +'</div>';
 
   /* Xfinity Pro — optional here, and it moves the total above */
   document.getElementById('xc-pro').innerHTML=
@@ -1292,7 +1339,7 @@ function renderCompare(){
     +'<div class="pro-add" onclick="toggleXmPro()">'
       +'<div class="pro-sw"><div class="pro-thumb"></div></div>'
       +'<div class="pro-add-t">'+(S.xmPro?t('Added to your plan'):t('Add Xfinity Pro'))+'</div>'
-      +'<div class="pro-total">'+(S.xmPro?t('New total')+' '+money(cur.promo+mob+ip+pro)+'/'+t('mo'):'')+'</div>'
+      +'<div class="pro-total">'+(S.xmPro?t('New total')+' '+money(xfTotal())+'/'+t('mo'):'')+'</div>'
     +'</div></div>';
 
   /* Get more with Mobile Plus */
@@ -1354,6 +1401,8 @@ let _pendingPath='bundle';
 function goSignup(){ _pendingPath='bundle'; openPrepay(); }
 function goSignupMobile(){
   _pendingPath='mobile';
+  /* Already carrying NOW TV + Shield? There is nothing left to ask — write it up. */
+  if(S.xmBundle){ openPrepay(); return; }
   const tot=xfTotal(), withB=tot+NOW_TV+SHIELD, c=xmPlan();
   const svc=[t('NOW TV'),t('Xfinity Shield'),t('Cybersecure + parental controls')].concat(c.peacock?[t('Peacock Premium')]:[]);
   document.getElementById('modal').innerHTML=
@@ -1366,12 +1415,23 @@ function goSignupMobile(){
      +'<div class="cmp-box cmp-b" style="background:linear-gradient(160deg,#FFF7E0,#FFFDF5);border-color:#E39A00"><div class="cmp-lbl" style="color:#9A6B00">'+t('With the bundle')+'</div>'
        +'<div class="cmp-n" style="color:var(--price)">'+money(withB)+'</div><div class="cmp-d" style="color:var(--txt2)">'+svc.join(' · ')+'</div></div>'
    +'</div>'
-   +'<button class="m-close" style="background:linear-gradient(135deg,#7B3FE4,#5422BA)" onclick="addBundleBack()">'+t('Add it — this is the better deal')+'</button>'
+   +'<button class="m-close" style="background:linear-gradient(135deg,#7B3FE4,#5422BA)" onclick="addBundleHere()">'+t('Add it — this is the better deal')+'</button>'
    +'<button class="btn-txt" style="width:100%;margin-top:9px" onclick="closeModal();openPrepay()">'+t('No thanks, continue without it')+'</button>'
    +'</div>';
   document.getElementById('mask').classList.add('open'); document.body.style.overflow='hidden';
 }
-function addBundleBack(){ closeModal(); _pendingPath='bundle'; backToFlyer(); }
+/* "Add it" used to jump the rep back to the flyer, which read as the tool
+   losing its place. It now adds NOW TV + Shield to THIS plan, in place. */
+function addBundleHere(){
+  S.xmBundle=true; _pendingPath='mobile'; closeModal();
+  renderCompare(); applyTranslations();
+  requestAnimationFrame(function(){
+    var card=document.getElementById('xc-bundle-card');
+    if(card) card.scrollIntoView({behavior:'smooth',block:'center'});
+    pulseTotal();
+  });
+}
+function addBundleBack(){ addBundleHere(); }
 function openPrepay(){
   document.getElementById('modal').innerHTML=
    '<div class="m-head"><button class="m-x" onclick="closeModal()">×</button><div class="m-head-in">'
@@ -1432,6 +1492,7 @@ function buildRecap(){
     h+=rrow('Internet rate',money(c.promo)+'/mo (1 Gig)')
       +rrow('Mobile lines',S.mobLines+' ('+money(mobCost(S.mobLines))+'/mo)')
       +rrow('iPad bundle',S.ipad?'Yes (+'+money(IPAD_TOTAL)+'/mo)':'No')
+      +rrow('NOW TV + Shield',S.xmBundle?'Yes (+'+money(NOW_TV+SHIELD)+'/mo)':'No')
       +rrow('Xfinity Pro',S.xmPro?'Yes (+'+money(PRO)+'/mo)':'No')
       +rrow('Household total',money(hhTotal())+'/mo');
   } else {
@@ -1479,7 +1540,7 @@ async function submitToSheets(){
     devices:S.answers.devices||'',
     recommended_speed:c.nm,
     internet_plan: onMobile
-      ? (c.nm+' Internet w/ Xfinity Mobile ('+money(c.promo)+')')
+      ? (c.nm+' Internet w/ Xfinity Mobile ('+money(c.promo)+')'+(S.xmBundle?' + NOW TV + Shield ('+money(NOW_TV+SHIELD)+')':''))
       : ('Whole Home Bundle '+c.nm+' — Internet + NOW TV + Shield ('+money(c.bundle)+')'),
     bundle_path: onMobile?'Xfinity Mobile options':'Whole Home Bundle',
     bundle_price:money(c.bundle)+'/mo',
@@ -1516,7 +1577,7 @@ async function submitToSheets(){
 
 function restart(){
   Object.assign(S,{answers:{},step:0,speed:'gig',manual:false,pro:false,
-    carrier:'',mobLines:1,ipad:false,currentBill:0,xmSpeed:'gig',xmPro:false,outcome:null,reasons:[],path:'bundle'});
+    carrier:'',mobLines:1,ipad:false,currentBill:0,xmSpeed:'gig',xmPro:false,xmBundle:false,outcome:null,reasons:[],path:'bundle'});
   const bi=document.getElementById('bill-inp'); if(bi) bi.value='';
   ['flyer-screen','mobile-screen','compare-screen','recap-screen'].forEach(i=>document.getElementById(i).classList.remove('active'));
   document.getElementById('quiz-screen').classList.add('active');
@@ -1622,6 +1683,9 @@ const ES={
 "I don't watch TV\" — show me internet only":'No veo televisión',
 'NOW TV':'NOW TV','Xfinity Shield':'Xfinity Shield','Cybersecure + parental controls':'Cybersecure y controles parentales',
 'Peacock Premium':'Peacock Premium','New total':'Nuevo total',
+'Complete The Bundle':'Completa El Paquete','Add the bundle':'Agregar el paquete','per month':'por mes',
+'TV and home protection for the price of one streaming app \u2014 Peacock alone is about $11 of it.':'Televisi\u00f3n y protecci\u00f3n del hogar por el precio de una sola app de streaming \u2014 Peacock por s\u00ed solo cuesta unos $11.',
+'No annual contract \u2014 it rides along with the internet rate.':'Sin contrato anual \u2014 va junto con la tarifa de internet.',
 'Adds cellular backup during outages, a WiFi extender for the rooms the gateway cannot reach, and the ability to prioritize one device.':'Añade respaldo celular durante apagones, un extensor WiFi para los cuartos que el módem no alcanza, y la opción de priorizar un dispositivo.',
 'The 5-year guarantee applies to the internet rate. Bundle totals include NOW TV and Xfinity Shield at current rates; add-on prices may change.':'La garantía de 5 años aplica a la tarifa de internet. El total del paquete incluye NOW TV y Xfinity Shield a tarifas actuales; los precios de los adicionales pueden cambiar.',
 'Includes the $10/mo autopay and paperless billing discount with an eligible payment method. Taxes and fees extra. Internet Only is standalone internet pricing.':'Incluye el descuento de $10/mes por pago automático y factura sin papel con un método de pago elegible. Impuestos y cargos aparte. Solo Internet es el precio de internet por sí solo.',
