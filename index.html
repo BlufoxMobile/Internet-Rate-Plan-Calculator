@@ -7,7 +7,12 @@
 <title>Xfinity Whole Home Bundle — Internet Plan Calculator</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800;900&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<!-- Perf (2026-09-24): the font sheet loads non-blocking (as on the 6th Gen sheet). A render-blocking
+     stylesheet from a third-party host leaves the page blank for as long as that host hangs (store
+     guest Wi-Fi, captive portals). media="print" + onload paints in the fallback font at once and swaps
+     to Montserrat/Inter when the sheet arrives. If this comment is gone, an older copy was re-uploaded. -->
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800;900&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+<noscript><link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800;900&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet"></noscript>
 <style>
 /* ═══════════════════════════════════════════════════════
    XFINITY WHOLE HOME BUNDLE — CALCULATOR
@@ -1876,7 +1881,12 @@ renderQuiz();
   function gL(k){var s=L();try{return s?s.getItem(k):null}catch(e){return null}}
   function sL(k,v){var s=L();try{if(s)s.setItem(k,v)}catch(e){}}
   function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
-  function jget(u){return fetch(u,{cache:'no-store'}).then(function(r){if(!r.ok)throw 0;return r.json()})}
+  /* Perf (2026-09-24): 10 s cap per request (AbortController; iPadOS 12.2+). With no cap, a raw.githubusercontent
+     request that hangs on store Wi-Fi never reaches the Pages fallback, and the name list sits on "Loading names…"
+     for good (the roster Promise.all below waits on both copies). Nothing else about the request changes. */
+  function jget(u){var c=(typeof AbortController==='function')?new AbortController():null,t=c?setTimeout(function(){c.abort()},10000):0;
+    return fetch(u,c?{cache:'no-store',signal:c.signal}:{cache:'no-store'}).then(function(r){if(!r.ok)throw 0;return r.json()})
+      .then(function(v){clearTimeout(t);return v},function(e){clearTimeout(t);throw e})}
   function toFull(s){return CFG.shortStores ? s+' Xfinity Store' : s;}
   function toDisplay(full){return CFG.shortStores ? full.replace(/ Xfinity Store$/,'') : full;}
   function call(name){ if(name && typeof window[name]==='function'){ try{window[name]()}catch(e){} } }
@@ -2060,7 +2070,10 @@ renderQuiz();
   var SUFFIX = ' Xfinity Store';
   var LS_KEY = 'xfc_rep_email';
   function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
-  function jget(u){ return fetch(u,{cache:'no-store'}).then(function(r){ if(!r.ok) throw 0; return r.json(); }); }
+  /* Perf (2026-09-24): same 10 s cap as the roster block above, so a hung raw request falls through to Pages. */
+  function jget(u){ var c=(typeof AbortController==='function')?new AbortController():null, t=c?setTimeout(function(){ c.abort(); },10000):0;
+    return fetch(u,c?{cache:'no-store',signal:c.signal}:{cache:'no-store'}).then(function(r){ if(!r.ok) throw 0; return r.json(); })
+      .then(function(v){ clearTimeout(t); return v; }, function(e){ clearTimeout(t); throw e; }); }
   function gL(k){ try{ return localStorage.getItem(k); }catch(e){ return null; } }
   function sL(k,v){ try{ localStorage.setItem(k,v); }catch(e){} }
 
