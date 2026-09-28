@@ -5,6 +5,87 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#180054">
 <title>Xfinity Whole Home Bundle — Internet Plan Calculator</title>
+<script>/* 2026-09-27: REMEMBER THE REP THROUGH THE COOKCOUNTYCOOKS.COM VIEWER.
+   On an iPad, Safari (and Chrome, which is Safari underneath) keeps a framed page's
+   localStorage only for the session, so inside cookcountycooks.com this page forgot the
+   rep's name, store and email on every reopen. The site keeps them in its own storage:
+   this asks for them as the page opens ({source:'ccc-tool', action:'rep-get'}) and tells
+   the site when the rep changes them ({action:'rep-set'}). The Mobile and Upgrade quote
+   sheets share the same record (store as its short name). Talks only to the
+   cookcountycooks.com origin; opened directly, nothing changes. */
+(function () {
+  var HOSTS = ['https://cookcountycooks.com', 'https://www.cookcountycooks.com'], host = '';
+  try { if (window.parent === window) return; } catch (e) { return; }
+  try { if (location.ancestorOrigins && location.ancestorOrigins.length) host = location.ancestorOrigins[0]; } catch (e) {}
+  if (!host) { try { host = new URL(document.referrer).origin; } catch (e) {} }
+  if (HOSTS.indexOf(host) === -1) return;
+  function gL(k) { try { return localStorage.getItem(k) || ''; } catch (e) { return ''; } }
+  function sL(k, v) { try { localStorage.setItem(k, v); } catch (e) {} }
+  function $(id) { return document.getElementById(id); }
+  var touched = false, timer = 0, want = null;
+  function report() {
+    clearTimeout(timer);
+    timer = setTimeout(function () {
+      var n = $('rep-name'), s = $('rep-store'), m = $('rep-email');
+      var name = String(n ? n.value : gL('xfc_rep_name')).trim();
+      var rec = {
+        store: String(s ? s.value : gL('xfc_rep_store')).trim(),
+        rep: /^__/.test(name) ? '' : name,
+        email: String(m ? m.value : gL('xfc_rep_email')).trim(),
+        phone: '', manual: false
+      };
+      try { window.parent.postMessage({ source: 'ccc-tool', action: 'rep-set', rep: rec }, host); } catch (e) {}
+    }, 400);
+  }
+  // Put a remembered rep on the page's own controls if they are already built
+  // (the roster block builds them 250 ms after load and reads the keys seeded below).
+  function apply() {
+    if (!want || touched) return;
+    var s = $('rep-store'), n = $('rep-name');
+    if (s && want.store && s.value !== want.store) {
+      s.value = want.store;
+      if (s.value === want.store) s.dispatchEvent(new Event('change', { bubbles: true }));
+    }
+    n = $('rep-name');
+    if (n && want.rep && n.value !== want.rep) {
+      if (n.tagName === 'SELECT') {
+        n.value = want.rep;
+        if (n.value === want.rep) n.dispatchEvent(new Event('change', { bubbles: true }));
+      } else if (!n.value) {
+        n.value = want.rep;
+        n.dispatchEvent(new Event('input', { bubbles: true }));
+      }
+    }
+  }
+  addEventListener('message', function (e) {
+    if (e.source !== window.parent || e.origin !== host) return;
+    var d = e.data;
+    if (!d || typeof d !== 'object' || d.source !== 'ccc-host' || d.type !== 'rep' || touched) return;
+    var r = d.rep;
+    if (!r || typeof r !== 'object') return;
+    var store = typeof r.store === 'string' ? r.store.replace(/ Xfinity Store$/i, '').trim() : '';
+    var name = typeof r.rep === 'string' ? r.rep.trim() : '';
+    var email = typeof r.email === 'string' ? r.email.trim() : '';
+    if (!store && !name) return;
+    if (store) sL('xfc_rep_store', store);
+    if (name) sL('xfc_rep_name', name);
+    if (email) sL('xfc_rep_email', email);
+    want = { store: store, rep: name };
+    if (document.readyState !== 'loading') setTimeout(apply, 600);
+  });
+  function bind() {
+    // The roster block rebuilds #rep-name, so listen at the document.
+    document.addEventListener('input', function (ev) {
+      if (ev.isTrusted && ev.target && ev.target.id === 'rep-name') { touched = true; report(); }
+    }, true);
+    document.addEventListener('change', function (ev) {
+      var id = ev.target && ev.target.id;
+      if (ev.isTrusted && (id === 'rep-name' || id === 'rep-store' || id === 'rep-email')) { touched = true; report(); }
+    }, true);
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', bind); else bind();
+  try { window.parent.postMessage({ source: 'ccc-tool', action: 'rep-get' }, host); } catch (e) {}
+})();</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <!-- Perf (2026-09-24): the font sheet loads non-blocking (as on the 6th Gen sheet). A render-blocking
